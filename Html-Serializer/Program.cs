@@ -87,13 +87,15 @@ static async Task<string> Load(string url)
     var html = await response.Content.ReadAsStringAsync();
     return html;
 }
+void Check(string s, HtmlElement dom)
+{
+    Selector selector = Selector.Parse(s);
+    var result = dom.FindElementsBySelector(selector);
+    result.ToList().ForEach(element => { Console.WriteLine(element); });
+}
 var html = await Load("https://hebrewbooks.org/");//loading html from website
-
 html = new Regex("[\\r\\n\\t]").Replace(new Regex("\\s{2,}").Replace(html, ""), "");
 var htmlLines = new Regex("<(.*?)>").Split(html).Where(s => s.Length > 0);
-//var s = await Load("https://hebrewbooks.org/");
-//s = new Regex("[\\r\\n\\t]").Replace(new Regex("\\s{2,}").Replace(s, ""), "");
-//var htmlLines = new Regex("<(.*?)>").Split(s).Where(s => s.Length > 0);//divide the html to tags
 var root = Parse(htmlLines);
 PrintTreeHtmlElement(root);
 
